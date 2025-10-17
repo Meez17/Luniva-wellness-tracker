@@ -1,0 +1,100 @@
+{% extends "tracker/base.html" %}
+{% load static %}
+{% block title %}Log Flow Day - Luniva{% endblock %}
+
+{% block content %}
+<div class="container pastel-bg" style="max-width: 1100px; margin-top: 30px;">
+  <div class=="card shadow-sm p-4 pastel-bg">
+    <div class="text-center mb-4">
+      <img src="{% static 'images/bloom.gif' %}" alt="Profile gif" style="max-width: 220px;">
+    </div>
+
+    <h3 class="text-center mb-2" style="color:#A18BD0;">Keep track of your flow</h3>
+    <p class="text-center text-muted mb-4">
+      Logging your flow days helps you understand your cycle better and provides insights into your overall health.
+    </p>
+    <p>
+      <strong>Note:</strong> If you haven't set up your cycle yet, please do so in the
+      <a href="{% url 'add_cycle' %}" style="color: #ECA1A6; font-weight: bold; text-decoration: underline;">Profile</a> section first.
+    </p>
+
+    {% if form.non_field_errors %}
+      <div class="alert alert-danger">
+        <ul>
+          {% for error in form.non_field_errors %}
+            <li>{{ error }}</li>
+          {% endfor %}
+        </ul>
+      </div>
+    {% endif %}
+
+    {% if messages %}
+      {% for message in messages %}
+        <div class="alert alert-{{ message.tags }}">{{ message }}</div>
+      {% endfor %}
+      <script>
+        setTimeout(function() {
+          document.querySelectorAll('.alert').forEach(function(el){ el.style.display = 'none'; });
+        }, 3000);
+      </script>
+    {% endif %}
+
+    <form method="post" id="flow-day-form" class="p-3">
+      {% csrf_token %}
+
+      <div class="mb-3">
+        {{ form.cycle.label_tag }}
+        {{ form.cycle }}
+        {% if form.fields.cycle.queryset.count == 0 %}
+          <div class="form-text text-danger">No cycles available. Please create one first.</div>
+        {% endif %}
+        {% if form.cycle.errors %}
+          <div class="text-danger small">{{ form.cycle.errors.as_text }}</div>
+        {% endif %}
+      </div>
+
+      <div class="mb-3">
+        {{ form.date.label_tag }}
+        {{ form.date }}
+        {% if form.date.errors %}
+          <div class="text-danger small">{{ form.date.errors.as_text }}</div>
+        {% endif %}
+        <div class="form-text">Only dates inside the selected cycle are selectable.</div>
+      </div>
+
+      <div class="mb-3">
+        {{ form.intensity.label_tag }}
+        {{ form.intensity }}
+        {% if form.intensity.errors %}
+          <div class="text-danger small">{{ form.intensity.errors.as_text }}</div>
+        {% endif %}
+      </div>
+
+      <div class="d-flex justify-content-between mt-3">
+        <a href="{% url 'dashboard' %}" class="btn btn-outline-secondary">← Back</a>
+        <button type="submit" class="btn btn-primary">Save</button>
+      </div>
+    </form>
+  </div>
+</div>
+
+<script>
+  (function(){
+    const cycleSelect = document.querySelector('#id_cycle');
+    if (!cycleSelect) return;
+
+    cycleSelect.addEventListener('change', function(){
+      const params = new URLSearchParams(window.location.search);
+      if (this.value) {
+        params.set('cycle', this.value);
+      } else {
+        params.delete('cycle');
+      }
+      // preserve date if present
+      const dateInput = document.querySelector('#id_date');
+      if (dateInput && dateInput.value) params.set('date', dateInput.value);
+      window.location.search = params.toString();
+    });
+  })();
+</script>
+{% endblock %}

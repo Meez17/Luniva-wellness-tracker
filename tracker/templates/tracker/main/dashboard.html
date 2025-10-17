@@ -1,0 +1,196 @@
+{% extends "tracker/base.html" %}
+{% load static %}
+{% block title %}Dashboard - Luniva{% endblock %}
+
+{% block content %}
+
+<div class="container-fluid mt-4">
+  <div class="row">
+    <!-- LEFT COLUMN -->
+    <div class="col-lg-3 col-md-4 mb-4">
+      <!-- Search Bar -->
+      <div class="mb-2">
+        <form method="GET" action="{% url 'diary_page' %}">
+          <input type="text" name="q" class="search-input" placeholder="Search diary, symptoms, cravings..." value="{{ request.GET.q|default_if_none:'' }}">
+          <div class="search-actions">
+            <button type="submit" class="btn-search">Search</button>
+            <a href="{% url 'dashboard' %}" class="btn-clear">Clear</a>
+          </div>
+        </form>
+      </div>
+      <!-- Side Navigation -->
+      <div class="list-group mb-3 mt-2" styles="border-radius: 8px; overflow: hidden; box-shadow: 0 2px 6px rgba(0,0,0,0.1); border: 1px solid #ECA1A6">
+        <a href="{% url 'profile' %}" class="list-group-item list-group-item-action">Profile</a>
+        <a href="{% url 'add_cycle' %}" class="list-group-item list-group-item-action">Add Cycle</a>
+        <a href="{% url 'add_flow_day' %}" class="list-group-item list-group-item-action">Log Flow Intensity</a>
+        <a href="{% url 'add_symptom' %}" class="list-group-item list-group-item-action">Add Symptom</a>
+        <a href="{% url 'add_craving' %}" class="list-group-item list-group-item-action">Cravings</a>
+        <a href="{% url 'selfcare' %}" class="list-group-item list-group-item-action">Self-Care</a>
+      </div>
+      
+      <!-- Profile Summary -->
+      <div class="card shadow-sm mb-4">
+        <div class="card-body" style="background-color: #f8f9daff;">
+          <h6 class="card-title" style="color: #2D3142;">👤 Profile Summary</h6>
+          <p><strong>Name:</strong> {{ profile.name|default:user.get_full_name|default:user.username }}</p>
+          <p><strong>Age:</strong> {{ profile.age|default:"—" }}</p>
+          <p><strong>Cycle Length:</strong> {{ profile.cycle_length|default:"Unknown" }} days</p>
+          <p><strong>Average Flow:</strong> {{ profile.average_flow|default:"—" }}</p>
+          <p><strong>Currently on Period:</strong> {{ profile.currently_on_period|yesno:"Yes,No" }}</p>
+          <p class="small-muted"><strong>Last Period Start:</strong> {{ profile.last_period_start|default:"Not set" }}</p>
+          <p class="small-muted"><strong>Last Period End:</strong> {{ profile.last_period_end|default:"Not set" }}</p>
+          <p><strong>Birth Control:</strong> {{ profile.birth_control|default:"—" }}</p>
+          <p><strong>Regularity:</strong> {{ profile.regularity|default:"—" }}</p>
+          <p><strong>Goals:</strong> {{ profile.goals|default:"—" }}</p>
+          <p><strong>Notes:</strong> {{ profile.notes|default:"No notes yet" }}</p>
+          <div class="mt-3 p-2" style="background: rgba(142,120,192,0.08); border-radius:6px;">
+            <p><strong>Pill reminder</strong></p>
+            {% if profile.pill_reminder_time %}
+              <p>Time: <strong>{{ profile.pill_reminder_time }}</strong></p>
+              <a href="{% url 'profile' %}" class="btn btn-sm" style="background-color: #ECA1A6; color: #fff;">Change Reminder</a>
+            {% else %}
+              <p class="text-muted">Not set</p>
+              <a href="{% url 'profile' %}" class="btn btn-sm" style="background-color: #A18BD0; color: #fff;">Set Reminder</a>
+            {% endif %}
+          </div>
+        </div>
+      </div>
+    </div>
+    <!-- RIGHT COLUMN -->
+    <div class="col-lg-9 col-md-8">
+      <div class="alert alert-info text-center mb-4 pastel-bg" style="font-weight: 500;">
+        🌸 {{ profile.name|default:user.first_name }}, {{ daily_affirmation }}
+      </div>
+      <h2 class="text-center mb-4" style="color: #A18BD0;">Your Cycle Overview</h2>
+      <div class="row mb-4">
+        <div class="col-md-12 mb-4">
+          <div class="card shadow-sm">
+            <div class="chart-heading bg-pastel-purple">Cycle Duration</div>
+            <div class="card-body p-3">
+              <canvas id="durationsChart" height="180"></canvas>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="row mb-4">
+        <div class="col-md-6 mb-4">
+          <div class="card shadow-sm">
+            <div class="chart-heading bg-pastel-pink">Flow Intensity Overview</div>
+            <div class="card-body p-3">
+              <canvas id="flowChart" height="180"></canvas>
+            </div>
+          </div>
+        </div>
+        <div class="col-md-6 mb-4">
+          <div class="card shadow-sm">
+            <div class="chart-heading bg-pastel-yellow">Mood + Craving Overview</div>
+            <div class="card-body p-3">
+              <p class="small-muted text-center">Counts of moods and cravings recorded by you; labels show categories.</p>
+              <canvas id="moodCravingChart" height="180"></canvas>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="row mb-4">
+        <div class="col-md-6 mb-4">
+          <div class="card shadow-sm">
+            <div class="chart-heading bg-pastel-green">🌿 Cycle Phases</div>
+            <div class="card-body">
+              <p>{{ wellness_tip|default:"Track your cycle regularly to get personalized insights." }}</p>
+              <a href="{% url 'cycle_phases' %}" class="btn btn-link p-0" style="color: #A18BD0; font-size: 0.9rem;">Learn more about your cycle phases →</a>
+            </div>
+          </div>
+        </div>
+        <div class="col-md-6 mb-4">
+          <div class="card shadow-sm">
+            <div class="chart-heading bg-pastel-blue">🔮 Cycle Predictions</div>
+            <div class="card-body">
+              {% if next_period_date %}
+                <p><strong>Next Expected Period:</strong> {{ next_period_date }}</p>
+                <p><strong>Current Phase:</strong> {{ predicted_phase }}</p>
+                <p><strong>Suggested Care:</strong> {{ care_tip }}</p>
+              {% else %}
+                <p>No predictions available yet. Log at least 2 cycles to activate predictions.</p>
+              {% endif %}
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div> <!-- End main row -->
+
+  <!-- Diary full width (outside grid) -->
+  <div class="row mb-4">
+    <div class="col-12">
+      <div class="p-3 text-center pastel-bg" style="border-radius: 6px;">
+        <h2 style="color: #fff;">📝 My Diary</h2>
+        <p class="lead text-light">Reflect, release, and record your thoughts. This space is just for you.</p>
+        <div class="text-center mt-3">
+          <a href="{% url 'diary_page' %}" class="diary-link">✨ View Full Diary</a>
+        </div>
+      </div>
+    </div>
+  </div>
+</div> <!-- End container-fluid -->
+
+<!-- Charts scripts -->
+<script src="https://cdn.jsdelivr.net/npm/chart.js@3.9.1/dist/chart.min.js"></script>
+<script>
+/* Cycle durations (bar) - ticks every 5 days up to 40 */
+fetch("{% url 'cycles_json' %}")
+  .then(r => r.ok ? r.json() : Promise.reject('No cycles data'))
+  .then(data => {
+    const labels = data.labels || [];
+    const durations = data.durations || [];
+    const ctx = document.getElementById('durationsChart').getContext('2d');
+    new Chart(ctx, {
+      type: 'bar',
+      data: { labels, datasets: [{ label: 'Cycle Length (days)', data: durations, backgroundColor: '#b1e1dbff' }] },
+      options: { responsive:true, plugins:{legend:{position:'bottom'}}, scales:{ y:{ beginAtZero:true, max:40, ticks:{ stepSize:5 } } } }
+    });
+  })
+  .catch(err => console.error('Cycles chart error', err));
+
+/* Flow intensity (line) */
+fetch("{% url 'flow_day_json' %}")
+  .then(r => r.ok ? r.json() : Promise.reject('No flow days'))
+  .then(data => {
+    const labels = data.labels || [];
+    const values = data.values || [];
+    const colors = data.colors || [];
+    const ctx = document.getElementById('flowChart').getContext('2d');
+    new Chart(ctx, {
+      type: 'line',
+      data: { labels, datasets:[{ label:'Flow Intensity (1=Light,3=Heavy)', data: values, borderColor:'#A18BD0', backgroundColor:'rgba(161,139,208,0.12)', pointBackgroundColor: colors, fill:true, tension:0.25, pointRadius:3 }] },
+      options: { responsive:true, plugins:{legend:{position:'bottom'}}, scales:{ y:{ beginAtZero:true, min:0, max:3, ticks:{ stepSize:1 } } } }
+    });
+  })
+  .catch(err => console.error('Flow chart error', err));
+
+/* Mood + Cravings (stacked). Template expects mood_cravings_json or falls back to symptom/craving endpoints. */
+fetch("{% url 'mood_cravings_json' %}")
+  .then(r => r.ok ? r.json() : Promise.reject('No mood/cravings data'))
+  .then(data => {
+    const labels = data.labels || [];
+    const moods = data.moods || [];
+    const cravings = data.cravings || [];
+    const ctx = document.getElementById('moodCravingChart').getContext('2d');
+    new Chart(ctx, { type:'bar', data:{ labels, datasets:[{label:'Mood Count',data:moods,backgroundColor:'#cbe3e0ff' },{label:'Craving Count',data:cravings,backgroundColor:'#ECA1A6'}] }, options:{ responsive:true, plugins:{legend:{position:'bottom'}}, scales:{ x:{ stacked:true }, y:{ stacked:true, beginAtZero:true } } } });
+  })
+  .catch(() => {
+    /* fallback merging symptom_json + craving_json (existing) */
+    Promise.all([
+      fetch("{% url 'symptom_json' %}").then(r => r.ok ? r.json() : {labels:[], values:[]}).catch(()=>({labels:[],values:[]})),
+      fetch("{% url 'craving_json' %}").then(r => r.ok ? r.json() : {labels:[], values:[]}).catch(()=>({labels:[],values:[]})),
+    ]).then(([moodData, cravingData]) => {
+      const labels = Array.from(new Set([...(moodData.labels||[]), ...(cravingData.labels||[])]));
+      const moodMap = (moodData.labels||[]).reduce((acc,l,i)=> (acc[l]=moodData.values[i]||0, acc), {});
+      const cravingMap = (cravingData.labels||[]).reduce((acc,l,i)=> (acc[l]=cravingData.values[i]||0, acc), {});
+      const merged = { labels, moods: labels.map(l => moodMap[l]||0), cravings: labels.map(l => cravingMap[l]||0) };
+      const ctx = document.getElementById('moodCravingChart').getContext('2d');
+      new Chart(ctx, { type:'bar', data:{ labels: merged.labels, datasets:[{label:'Mood Count',data:merged.moods,backgroundColor:'#A18BD0'},{label:'Craving Count',data:merged.cravings,backgroundColor:'#ECA1A6'}] }, options:{ responsive:true, plugins:{legend:{position:'bottom'}}, scales:{ x:{ stacked:true }, y:{ stacked:true, beginAtZero:true } } } });
+    }).catch(e => console.error('Combined fallback error', e));
+  });
+</script>
+
+{% endblock %}

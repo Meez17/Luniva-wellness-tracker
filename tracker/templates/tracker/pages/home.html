@@ -1,0 +1,17 @@
+{% extends "tracker/base.html" %}
+{% load static %}
+
+{% block title %}Welcome to Luniva{% endblock %}
+
+{% block content %}
+<div class="container text-center mt-5">
+  <img src="{% static 'images/logo.png' %}" alt="Luniva Logo" style="max-height: 200px;" class="mb-3">
+  <h1 style="color: #A18BD0;">Welcome to Luniva</h1>
+  <p class="lead" style="color: #2D3142;">Your gentle companion for cycle tracking, self-care, and wellness insights.</p>
+
+  <div class="mt-4">
+    <a href="{% url 'login' %}" class="btn btn-lg me-3" style="background-color: #eaed9cff;; color: #fff;">Login</a>
+    <a href="{% url 'sign_up' %}" class="btn btn-lg" style="background-color: #ECA1A6; color: #fff;">Sign Up</a>
+  </div>
+</div>
+{% endblock %}

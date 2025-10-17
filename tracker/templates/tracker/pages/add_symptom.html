@@ -1,0 +1,86 @@
+{% extends "tracker/base.html" %}
+{% block title %}Add Symptom - Luniva{% endblock %}
+{% load static %}
+
+{% block content %}
+<div class="container pastel-bg" style="max-width: 1100px; margin-top: 30px;">
+  <div class="card-body">
+    <div class="text-center mb-4">
+      <img src="{% static 'images/dance.gif' %}" alt="Profile gif" style="max-width: 220px;">
+    </div>
+
+    <h3 class="text-center mb-2" style="color:#A18BD0;"> Keep track of your symptoms</h3>
+    <p class="text-center text-light mb-4">
+      Logging your symptoms helps you and your healthcare provider understand your health better. <br>
+      You can log various symptoms you experience and any additional notes.
+    </p>
+
+    {% if form.errors %}
+      <div class="alert alert-danger">
+        <ul>
+          {% for field in form %}
+            {% for error in field.errors %}
+              <li><strong>{{ field.label }}:</strong> {{ error }}</li>
+            {% endfor %}
+          {% endfor %}
+        </ul>
+      </div>
+    {% endif %}
+
+  {% if messages %}
+  {% for message in messages %}
+    <div class="alert alert-success" id="success-message">{{ message }}</div>
+  {% endfor %}
+  <script>
+    setTimeout(function() {
+      var msg = document.getElementById('success-message');
+      if (msg) { msg.style.display = 'none'; }
+    }, 3000); // 3 seconds
+  </script>
+{% endif %}
+
+  <form method="post" class="p-4 rounded">
+    {% csrf_token %}
+    <div class="mb-3"> <p style="color: #ECA1A6;"> Please select a date</p>
+      {{ form.date.label_tag }} {{ form.date }}</div>
+    <br>
+
+    <div class="mb-3">
+      <p style="color: #ECA1A6;"> How are you feeling today?</p>
+  {{ form.mood.label_tag }} {{ form.mood }}
+  <small class="form-text text-muted">Select a mood or choose "Other"</small>
+</div>
+
+<div class="mb-3">
+  {{ form.custom_mood.label_tag }} {{ form.custom_mood }}
+</div>
+<br>
+<div class="mb-3">
+  <p style="color: #ECA1A6;">Are you experiencing cramps?</p>
+  {{ form.cramps.label_tag }} {{ form.cramps }}
+</div>
+
+<br>
+
+<div class="mb-3">
+  <p style="color: #ECA1A6;"> If you are menstruating, please indicate the flow intensity:</p>
+  {{ form.flow_intensity.label_tag }} {{ form.flow_intensity }}
+</div>
+
+<br>
+
+<div class="mb-3">{{ form.notes.label_tag }} {{ form.notes }}</div>
+<p>
+      <small class="form-text text-muted">Feel free to add any additional notes about your symptoms.</small>
+</p>
+<br>
+
+<div class="d-flex justify-content-between mt-3">
+      <a href="{% url 'dashboard' %}" class="btn" style="background-color: #ECA1A6; color: #fff;">← Back</a>
+      <button type="submit" class="btn" style="background-color: #A18BD0; color: #fff;">Save</button>
+  </div>
+  
+  </form>
+</div>
+
+{% endblock %}

@@ -1,0 +1,94 @@
+{% extends "tracker/base.html" %}
+{% block title %}Cycle Phases{% endblock %}
+{% load static %}
+{% block content %}
+
+<div class="container mt-5 pastel-bg" style="max-width: 900px;">
+  <div class="text-center mb-4">
+    <img src="{% static 'images/moon.gif' %}" alt="cycle phases" style="max-width: 200px;">
+  </div>
+
+  <h2 class="text-center mb-3" style="color:#A18BD0;">🌸 Understanding Your Cycle Phases</h2>
+  <p class="text-center text-muted mb-5">
+    Your menstrual cycle is a powerful rhythm that influences your energy, mood, and body. 
+    Learn how each phase supports your wellness journey.
+  </p>
+
+  <!-- 2x2 Grid Layout for Phases -->
+  <div class="row">
+    <div class="col-md-6 mb-4">
+      <div class="card shadow-sm" style="background-color: #f9d5d3;">
+        <div class="card-body">
+          <h4 style="color:#A18BD0;">🩸 Menstrual Phase (Days 1–5)</h4>
+          <p>This is the start of your cycle — when bleeding occurs. Hormone levels are at their lowest, and your body is shedding the uterine lining.</p>
+          <ul>
+            <li>Energy may be low — rest and gentle movement are ideal</li>
+            <li>Focus on nourishment, warmth, and reflection</li>
+            <li>Great time for journaling or quiet self-care</li>
+          </ul>
+          <p>
+            <strong>Tip:</strong> Embrace this phase as a time to slow down and listen to your body's needs.
+          </p>
+        </div>
+      </div>
+    </div>
+    <div class="col-md-6 mb-4">
+      <div class="card shadow-sm" style="background-color: #e6f4ea;">
+        <div class="card-body">
+          <h4 style="color:#A18BD0;">🌱 Follicular Phase (Days 6–13)</h4>
+          <p>Estrogen begins to rise, and your body prepares to release an egg. You may feel more energized and optimistic.</p>
+          <ul>
+            <li>Ideal time for planning, creativity, and new projects</li>
+            <li>Try strength training, cardio, or social activities</li>
+            <li>Brain function and memory may feel sharper</li>
+          </ul>
+          <p>
+            <strong>Tip:</strong> Harness this energy to set intentions and take on challenges.
+          </p>
+        </div>
+      </div>
+    </div>
+    <div class="col-md-6 mb-4">
+      <div class="card shadow-sm" style="background-color: #fce4ec;">
+        <div class="card-body">
+          <h4 style="color:#A18BD0;">🌼 Ovulation Phase (Day 14)</h4>
+          <p>This is your fertile window. Estrogen peaks and luteinizing hormone (LH) triggers the release of an egg.</p>
+          <ul>
+            <li>Energy, confidence, and libido are often highest</li>
+            <li>Great time for communication, collaboration, and visibility</li>
+            <li>Skin may glow, and mood is often elevated</li>
+          </ul>
+          <p>
+            <strong>Tip:</strong> Use this phase to connect with others and showcase your talents.
+          </p>
+        </div>
+      </div>
+    </div>
+    <div class="col-md-6 mb-4">
+      <div class="card shadow-sm" style="background-color: #e0e7f1;">
+        <div class="card-body">
+          <h4 style="color:#A18BD0;">🌙 Luteal Phase (Days 15–28)</h4>
+          <p>Progesterone rises to support a potential pregnancy. If no fertilization occurs, hormone levels drop, leading to PMS symptoms.</p>
+          <ul>
+            <li>Energy may dip — focus on rest, boundaries, and self-care</li>
+            <li>Cravings, bloating, and mood swings are common</li>
+            <li>Gentle exercise and calming routines are helpful</li>
+          </ul>
+          <p>
+            <strong>Tip:</strong> Prioritize self-compassion and listen to your body's signals during this phase.
+          </p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- CTA -->
+  <div class="text-center mt-4">
+    <a href="{% url 'dashboard' %}#flow-chart" class="btn btn-purple">📊 View Your Cycle Chart</a>
+  </div>
+  <div class="d-flex justify-content-between mt-3">
+    <a href="{% url 'dashboard' %}" class="btn" style="background-color: #ECA1A6; color: #fff;">← Back</a>
+  </div>
+</div>
+
+{% endblock %}

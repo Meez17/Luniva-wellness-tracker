@@ -1,0 +1,70 @@
+{% extends "tracker/base.html" %}
+{% block title %}Edit Prompt{% endblock %}
+{% load static %}
+{% block content %}
+
+<div class="container mt-5 pastel-bg" style="max-width: 800px;">
+  <div class="text-center mb-4">
+    <img src="{% static 'images/purpleflowerlight.gif' %}" alt="prompt" style="max-width: 200px;">
+  </div>
+
+  <h3 class="text-center mb-2" style="color:#A18BD0;">Edit Prompt of the Day</h3>
+  <p id="promptText" class="text-center text-muted mb-3" style="cursor:pointer;" onclick="changePrompt()">
+    <em>{{ prompt_of_the_day }}</em>
+  </p>
+
+  <form method="POST">
+    {% csrf_token %}
+    <div class="mb-3">
+      {{ form.prompt.label_tag }}
+      {{ form.prompt }}
+    </div>
+    <div class="mb-3">
+      {{ form.answer.label_tag }}
+      {{ form.answer }}
+    </div>
+
+    <div class="d-flex justify-content-between mt-3">
+      <a href="{% url 'dashboard' %}" class="btn btn-pink">← Back</a>
+      <button type="submit" class="btn btn-purple">Save</button>
+    </div>
+  </form>
+</div>
+
+<script>
+const prompts = [
+  "What made you smile today?",
+  "What are you proud of this week?",
+  "What’s something you’re letting go of?",
+  "What do you need more of right now?",
+  "What’s a memory that brings you peace?",
+  "What’s a challenge you overcame recently?",
+  "What’s something new you learned about yourself?",
+  "What’s a small act of kindness you experienced?",
+  "What’s a goal you’re working towards?",
+  "What’s a dream you have for the future?",
+  "What’s a habit you want to build?",
+  "What’s a book or movie that inspired you?",
+  "What’s a place you want to visit and why?",
+  "What’s a skill you want to learn?",
+  "What’s a person who positively impacted your life?",
+  "What’s a moment when you felt truly at peace?",
+  "What’s a value that’s important to you?",
+  "What’s a way you can practice self-care this week?",
+  "What’s a recent accomplishment you’re proud of?",
+  "What’s a lesson you learned from a mistake?",
+  "What’s a way you can give back to your community?",
+  "What’s a way you can step out of your comfort zone?",
+  "What’s a way you can nurture your creativity?",
+  "What’s a way you can connect with nature?",
+  "What’s a way you can strengthen a relationship?",
+  "What’s a way you can simplify your life?",
+  "What’s a way you can practice mindfulness?"
+];
+function changePrompt() {
+  const current = document.getElementById("promptText");
+  const next = prompts[Math.floor(Math.random() * prompts.length)];
+  current.innerHTML = `<em>${next}</em>`;
+}
+</script>
+{% endblock %}

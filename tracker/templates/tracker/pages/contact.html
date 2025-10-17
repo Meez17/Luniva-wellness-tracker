@@ -1,0 +1,27 @@
+{% extends "tracker/base.html" %}
+{% load static %}
+{% block title %}Contact Us - Luniva{% endblock %}
+
+{% block content %}
+<div class="container mt-5 text-center">
+  <img src="{% static 'images/logo.png' %}" alt="Luniva Logo" style="max-width:150px;">
+
+  <h2 style="color: #A18BD0;">Contact Us</h2>
+  <p class="lead">We’d love to hear from you! Reach out with questions, feedback, or just to say hi 💌</p>
+
+  <div class="card mt-4 shadow-sm mx-auto" style="max-width: 500px; background-color: #B0E0E6;">
+    <div class="card-body text-start">
+      <p><strong>Email:</strong> <a href="mailto:info@luniva.com">info@luniva.com</a></p>
+      <p><strong>Phone:</strong> +27 78 062 0488</p>
+      <p><strong>Instagram:</strong> @luniva_wellness</p>
+    </div>
+  </div>
+
+  <div class="mt-4" style="background-color: #eaed9cff; padding: 20px; border-radius: 10px;">
+    <p>Thank you for choosing Luniva as your wellness companion!</p>
+    <p>Best regards,<br>The Luniva Team</p>
+  </div>
+
+  <a href="{% url 'welcome' %}" class="btn mt-3" style="background-color: #ECA1A6; color: #fff;">← Back to Home</a>
+</div>
+{% endblock %}

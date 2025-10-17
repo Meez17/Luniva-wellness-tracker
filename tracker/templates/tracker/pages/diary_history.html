@@ -1,0 +1,75 @@
+{% extends "tracker/base.html" %}
+{% load static %}
+{% block title %}Diary History{% endblock %}
+
+{% block content %}
+<link rel="stylesheet" href="{% static 'css/main.css' %}">
+
+<div class="container mt-4 mb-5">
+
+  <!-- Page Heading -->
+  <div class="pastel-bg text-center mb-4">
+    <h2 class="mb-2">📔 Your Diary History</h2>
+    <p class="lead">Reflect on your journey, revisit your thoughts, and track your growth over time.</p>
+  </div>
+
+  <!-- Date Filter Form -->
+  <div class="card shadow-sm mb-4">
+    <div class="card-body">
+      <form method="get" class="row g-3">
+        <div class="col-md-4">
+          <label for="start_date" class="form-label">Start Date</label>
+          <input type="date" name="start_date" id="start_date" class="form-control" value="{{ request.GET.start_date }}">
+        </div>
+        <div class="col-md-4">
+          <label for="end_date" class="form-label">End Date</label>
+          <input type="date" name="end_date" id="end_date" class="form-control" value="{{ request.GET.end_date }}">
+        </div>
+        <div class="col-md-4 d-flex align-items-end">
+          <button type="submit" class="btn btn-purple me-2">Filter</button>
+          <a href="{% url 'diary_history' %}" class="btn btn-pink">Clear</a>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- Diary Entries -->
+{% for entry in entries %}
+  <div class="card mb-3 shadow-sm bg-pastel-green">
+    <div class="card-body">
+      <h5 class="mb-2">{{ entry.title }}</h5>
+      <p><strong>Date:</strong> {{ entry.date }}</p>
+      <p>{{ entry.content }}</p>
+      {% if entry.short_term or entry.medium_term or entry.long_term %}
+        <hr>
+        <h6 class="mb-2" style="color: var(--dark);">🎯 Goals</h6>
+        {% if entry.short_term %}<p><strong>Today:</strong> {{ entry.short_term }}</p>{% endif %}
+        {% if entry.medium_term %}<p><strong>This Week:</strong> {{ entry.medium_term }}</p>{% endif %}
+        {% if entry.long_term %}<p><strong>This Month:</strong> {{ entry.long_term }}</p>{% endif %}
+      {% endif %}
+    </div>
+  </div>
+{% endfor %}
+
+
+  <!-- Pagination -->
+  {% if entries.has_other_pages %}
+    <nav aria-label="Diary pagination">
+      <ul class="pagination justify-content-center">
+        {% if entries.has_previous %}
+          <li class="page-item">
+            <a class="page-link" href="?page={{ entries.previous_page_number }}{% if request.GET.start_date %}&start_date={{ request.GET.start_date }}{% endif %}{% if request.GET.end_date %}&end_date={{ request.GET.end_date }}{% endif %}">←</a>
+          </li>
+        {% endif %}
+        <li class="page-item active"><span class="page-link">{{ entries.number }}</span></li>
+        {% if entries.has_next %}
+          <li class="page-item">
+            <a class="page-link" href="?page={{ entries.next_page_number }}{% if request.GET.start_date %}&start_date={{ request.GET.start_date }}{% endif %}{% if request.GET.end_date %}&end_date={{ request.GET.end_date }}{% endif %}">→</a>
+          </li>
+        {% endif %}
+      </ul>
+    </nav>
+  {% endif %}
+
+</div>
+{% endblock %}

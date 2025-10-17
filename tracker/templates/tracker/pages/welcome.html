@@ -1,0 +1,69 @@
+{% extends "tracker/base.html" %}
+{% load static %}
+{% block title %}Welcome to Luniva{% endblock %}
+
+{% block content %}
+<link rel="stylesheet" href="{% static 'css/main.css' %}">
+
+<div class="container mt-5 text-center pastel-bg" style="padding:28px;">
+  <img src="{% static 'images/logo.png' %}" alt="Luniva Logo" style="max-width:200px;">  
+
+  <!-- Welcome line — made to stand out on its own -->
+  <h2 style="margin-top:14px; margin-bottom:10px; font-family: 'Georgia', serif; font-size:2rem; color:var(--primary);">
+    Welcome
+    <span style="display:block; font-weight:700; font-size:2.25rem; color:var(--primary); letter-spacing:0.4px;">
+      {{ request.user.profile.name|default:request.user.username }}!
+    </span>
+  </h2>
+
+  <p class="lead" style="color: var(--dark); margin-bottom:18px;">
+    to your gentle companion for cycle tracking, self-care, and wellness insights.
+  </p>
+
+  <!-- Redesigned "what we help with" — lighter, spaced, easier on the eye -->
+  <div class="row justify-content-center mb-4">
+    <div class="col-md-8">
+      <div style="display:flex; flex-wrap:wrap; gap:12px; justify-content:center; align-items:flex-start;">
+        <div style="min-width:220px; background:rgba(255,255,255,0.6); border-radius:10px; padding:10px 14px; box-shadow:0 4px 10px rgba(0,0,0,0.03);">
+          <strong style="color:var(--primary); display:block; margin-bottom:6px;">Track your cycle</strong>
+          <span style="color:var(--muted); font-size:0.95rem;">Log periods, flow and predictions</span>
+        </div>
+
+        <div style="min-width:220px; background:rgba(255,255,255,0.6); border-radius:10px; padding:10px 14px; box-shadow:0 4px 10px rgba(0,0,0,0.03);">
+          <strong style="color:var(--primary); display:block; margin-bottom:6px;">Self-care habits</strong>
+          <span style="color:var(--muted); font-size:0.95rem;">Sleep, water, steps and energy</span>
+        </div>
+
+        <div style="min-width:220px; background:rgba(255,255,255,0.6); border-radius:10px; padding:10px 14px; box-shadow:0 4px 10px rgba(0,0,0,0.03);">
+          <strong style="color:var(--primary); display:block; margin-bottom:6px;">Diary & prompts</strong>
+          <span style="color:var(--muted); font-size:0.95rem;">Reflect, answer prompts, grow</span>
+        </div>
+
+        <div style="min-width:220px; background:rgba(255,255,255,0.6); border-radius:10px; padding:10px 14px; box-shadow:0 4px 10px rgba(0,0,0,0.03);">
+          <strong style="color:var(--primary); display:block; margin-bottom:6px;">Community</strong>
+          <span style="color:var(--muted); font-size:0.95rem;">Join threads, share anonymously</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Buttons — unchanged per request -->
+  <div class="row justify-content-center">
+    <div class="col-md-3 mb-2">
+      <a href="{% url 'profile' %}" class="btn btn-lg w-100" style="background-color: var(--tertiary); color: #2D3142;">👤 My Profile</a>
+    </div>
+    <div class="col-md-3 mb-2">
+      <a href="{% url 'dashboard' %}" class="btn btn-lg w-100" style="background-color: var(--primary); color: #fff;">📊 My Dashboard</a>
+    </div>
+    <div class="col-md-3 mb-2">
+      <a href="{% url 'wellness_update' %}" class="btn btn-lg w-100" style="background-color: var(--secondary); color: #fff;">🌿 My Wellness</a>
+    </div>
+  </div>
+
+  <!-- GIF — left exactly where it was -->
+  <div class="mt-4">
+    <img src="{% static 'images/selfcare.gif' %}" alt="Self Care GIF" style="max-width: 200px;">
+    <p class="mt-2" style="font-style: italic; color:var(--muted);">“Taking care of yourself is productive.”</p>
+  </div>
+</div>
+{% endblock %}

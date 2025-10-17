@@ -1,0 +1,38 @@
+{% extends 'tracker/base.html' %}
+{% load static %}
+
+{% block content %}
+<div class="container mt-5 text-center">
+  <img src="{% static 'images/logo.png' %}" alt="Luniva Logo" style="max-width:150px;">
+
+  <h2 class="mb-3" style="color: #A18BD0;">About Luniva</h2>
+  <p class="lead" style="color: #2D3142;">
+    Luniva is your gentle companion for menstrual health and wellness. We help you understand your body, track your rhythms, and embrace self-care.
+  </p>
+
+  <div class="card mt-4 shadow-sm" style="background-color: #eaed9cff;">
+    <div class="card-body">
+      <h4 style="color: #2D3142;">🌸 Key Features</h4>
+      <ul class="mt-4" style="color: #2D3142; list-style-type: none;">
+                <li>Menstrual Cycle Tracking: Log your periods, symptoms, and flow intensity.</li>
+                <li>Symptom & Mood Logging: Track emotions, pain levels, and other symptoms.</li>
+                <li>Cravings & Habits: Monitor cravings, exercise, sleep, and nutrition.</li>
+                <li>Diary Entries: Reflect on your day with personal notes.</li>
+                <li>Wellness Logging: Record moods, energy levels, sleep quality, and more.</li>
+                <li>Insights & Predictions: Get personalized insights based on your data.</li>
+                <li>Reminders: Set gentle reminders for upcoming periods or medication.</li>
+                <li>Privacy First: Your data is secure and private, always.</li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="mt-4" style="background-color: #C1E1C1; padding: 20px; border-radius: 10px;">
+    <p>We’re committed to continuous improvement and welcome your feedback to make Luniva even better.</p>
+    <p>Together, let’s embrace self-care and body positivity 💜</p>
+  </div>
+
+  <p class="mt-3">Thank you for choosing Luniva as your wellness companion!</p>
+
+  <a href="{% url 'home' %}" class="btn mt-3" style="background-color: #ECA1A6; color: #fff;">← Back to Home</a>
+</div>
+{% endblock %}

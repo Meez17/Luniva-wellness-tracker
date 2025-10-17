@@ -1,0 +1,77 @@
+{% extends "tracker/base.html" %}
+{% block title %}Wellness Update - Luniva{% endblock %}
+{% load static %}
+
+{% block content %}
+
+<div class="container mt-5">
+  <div class="text-center mb-4 p-4 header-journal pastel-bg" style=" border-radius: 12px;">
+      <div class="text-center mb-4">
+        <img src="{% static 'images/well.gif' %}" alt="Journaling gif" style="max-width: 200px;"> </div>
+    <h2 class="mb-2" style="color: #A18BD0;"> 🌿 My Wellness Update</h2>
+    <p class="lead text-light" style="colour:  #ECA1A6;"> 
+      Reflect on your journey towards holistic well-being. Here, you'll find insights from your wellness activities, empowering affirmations, and a summary of your self-care practices. <br>
+      Embrace the path to a healthier, happier you!</p>
+  </div>
+  
+  <!-- 🌸 Daily Affirmation -->
+  <div class="card mb-4 shadow-sm">
+    <div style="background-color: var(--secondary); padding: 10px;">
+      <h4 class="text-white m-0">🌸 Daily Affirmation</h4>
+    </div>
+    <div class="card-body text-center">
+      <p>{{ profile.name|default:user.first_name }}, {{ daily_affirmation }}</p>
+    </div>
+  </div>
+
+  <!-- 📔 Diary Entry -->
+  {% if latest_diary %}
+  <div class="card mb-4 shadow-sm">
+    <div style="background-color: var(--tertiary); padding: 10px;">
+      <h4 style="color: var(--primary); margin: 0;">📔 Latest Diary Entry</h4>
+    </div>
+    <div class="card-body">
+      <p><strong>Date:</strong> {{ latest_diary.date }}</p>
+      <p><strong>Title:</strong> {{ latest_diary.title }}</p>
+      <p><strong>Content:</strong> {{ latest_diary.content }}</p>
+      <a href="{% url 'diary_page' %}" class="btn btn-sm mt-2" style="background-color: var(--primary); color: #fff;">View All Entries</a>
+    </div>
+  </div>
+  {% endif %}
+
+  <!-- 📊 Cycle Insights -->
+  <div class="card mb-4 shadow-sm">
+    <div style="background-color: var(--green); padding: 10px;">
+      <h4 style="color: var(--primary); margin: 0;">📊 Cycle Insights</h4>
+    </div>
+    <div class="card-body">
+      <p><strong>Average Cycle Length:</strong> {{ avg_cycle_length }} days</p>
+      <p><strong>Most Common Flow Type:</strong> {{ most_common_flow }}</p>
+      <p><strong>Irregular Cycles Logged:</strong> {{ irregular_count }}</p>
+      <p><strong>Cycle Length Trend:</strong> {{ cycle_trend }}</p>
+      <a href="{% url 'dashboard' %}" class="btn btn-pink">📊 View Dashboard</a>
+    </div>
+  </div>
+
+  <!-- 🧘 Self-Care Summary -->
+  {% if latest_selfcare %}
+  <div class="card mb-4 shadow-sm">
+    <div style="background-color: var(--blue); padding: 10px;">
+      <h4 style="color: var(--primary); margin: 0;">🧘 Self-Care Summary</h4>
+    </div>
+    <div class="card-body">
+      <p><strong>Date:</strong> {{ latest_selfcare.date }}</p>
+      <p><strong>Hours Slept:</strong> {{ latest_selfcare.sleep_hours }} hrs</p>
+      <p><strong>Water Intake:</strong> {{ latest_selfcare.water_litres }} litres</p>
+      <p><strong>Steps Taken:</strong> {{ latest_selfcare.steps }} steps</p>
+      <p><strong>Wellness Notes:</strong> {{ latest_selfcare.notes|default:"No notes added." }}</p>
+      <a href="{% url 'selfcare_tracker' %}" class="btn btn-sm mt-2" style="background-color: var(--primary); color: #fff;">View Self-Care History</a>
+    </div>
+  </div>
+  {% endif %}
+
+  <div class="text-center mt-4">
+    <a href="{% url 'dashboard' %}" class="btn" style="background-color: var(--secondary); color: #fff;">← Back to Dashboard</a>
+  </div>
+</div>
+{% endblock %}

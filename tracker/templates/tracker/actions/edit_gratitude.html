@@ -1,0 +1,36 @@
+{% extends "tracker/base.html" %}
+{% block title %}Edit Gratitude{% endblock %}
+{% load static%}
+{% block content %}
+
+<div class="container mt-5 pastel-bg" style="max-width: 800px;">
+    <div class="text-center mb-4">
+      <img src="{% static 'images/flower2.gif' %}" alt="Gratitude" style="max-width: 200px;">
+    </div>
+  <h3 class="text-center mb-2" style="color:#A18BD0;">I am Grateful For...</h3>
+  <br>
+  <p class="text-center text-light mb-4">
+    Cultivating gratitude can enhance your well-being. <br>
+    Take a moment to reflect on what you're thankful for today.
+  <form method="POST">
+    {% csrf_token %}
+
+    <div> <p>
+      <label for="id_content" class="form-label"style="color: #ECA1A6;">
+      What are you grateful for today?</label>
+      {{ form.content }} </p>
+    </div>
+
+    <p>
+      <small class="text-muted">Tip: Reflecting on gratitude can boost your mood and overall well-being. 
+        Try to be specific about what you're thankful for!</small>
+    </p>
+   
+    <div class="d-flex justify-content-between mt-3">
+      <a href="{% url 'dashboard' %}" class="btn" style="background-color: #ECA1A6; color: #fff;">← Back</a>
+      <button type="submit" class="btn" style="background-color: #A18BD0; color: #fff;">Save</button>
+  </div>
+
+  </form>
+</div>
+{% endblock %}

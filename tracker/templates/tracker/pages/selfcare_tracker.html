@@ -1,0 +1,38 @@
+{% extends "tracker/base.html" %}
+
+{% block content %}
+<div class="container mt-4">
+  <h2 class="text-center mb-4" style="color: #A18BD0;"> Your Self-Care History</h2>
+
+  {% if entries %}
+    <div class="table-responsive">
+      <table class="table table-bordered table-striped">
+        <thead class="table-light">
+          <tr>
+            <th>Date</th>
+            <th>Sleep (hrs)</th>
+            <th>Water (L)</th>
+            <th>Steps</th>
+            <th>Notes</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for entry in entries %}
+          <tr>
+            <td>{{ entry.date }}</td>
+            <td>{{ entry.sleep_hours }}</td>
+            <td>{{ entry.water_litres }}</td>
+            <td>{{ entry.steps }}</td>
+            <td>{{ entry.notes|default:"—" }}</td>
+          </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+      <div>           <a href="{% url 'dashboard' %}" class="btn" style="background-color: #ECA1A6; color: #fff;">← Back to Dashboard </a></div>
+
+  {% else %}
+    <p class="text-muted text-center">No self-care entries yet.</p>
+  {% endif %}
+</div>
+{% endblock %}

@@ -1,0 +1,37 @@
+{% extends "tracker/base.html" %}
+{% load static %}
+{% load crispy_forms_tags %}
+{% block title %}Sign Up{% endblock %}
+
+{% block content %}
+<div class="container mt-5 text-center">
+  <img src="{% static 'images/logo.png' %}" alt="Luniva Logo" style="max-width:200px;">
+  <h2 class="mt-4" style="color: #A18BD0;">🌸 Create Your Luniva Account</h2>
+  <p class="lead">Join Luniva Wellness Tracker and begin your self-care journey today.</p>
+
+  {% if form.errors %}
+    <div class="alert alert-danger mt-3">
+      <strong>Please correct the errors below:</strong>
+    </div>
+  {% endif %}
+
+  {% if form.non_field_errors %}
+  <div class="alert alert-danger">
+    {{ form.non_field_errors }}
+  </div>
+{% endif %}
+
+  <form method="post" class="mt-4">
+    {% csrf_token %}
+    <div class="mx-auto" style="max-width: 500px;">
+      {{ form|crispy }}
+    </div>
+    <button type="submit" class="btn mt-3" style="background-color: #ECA1A6; color: #fff;">Sign Up</button>
+  </form>
+
+  <p class="mt-4">
+    Already have an account?
+    <a href="{% url 'login' %}" class="btn btn-outline-primary btn-sm ms-2">Log In</a>
+  </p>
+</div>
+{% endblock %}

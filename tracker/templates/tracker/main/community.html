@@ -1,0 +1,199 @@
+{% extends "tracker/base.html" %}
+{% load static %}
+{% block title %}Community - Luniva{% endblock %}
+
+{% block content %}
+<link rel="stylesheet" href="{% static 'css/main.css' %}">
+
+{% comment %} <!-- 🌸 Top Section -->
+<div class="container mt-4 mb-5">
+  <div class="pastel-bg mb-4 text-center">
+    <div class="text-center mb-4">
+      <img src="{% static 'images/woman.gif' %}" alt="Profile gif" style="max-width: 220px;">
+    </div>
+    <h2 class="mb-3" style="font-family: 'Segoe UI', sans-serif; color: #6a1b9a;">🌸 Welcome to the Luniva Community</h2>
+    <p class="lead" style="color: #444;">You're not alone. Connect, share, and grow with others navigating their wellness journey.</p>
+  </div>
+
+<div class="container-fluid pastel-bg p-4">
+  <h3 class="mb-4 text-center" style="color: #6a1b9a;">✨ Start a Community Conversation</h3>
+  <p class="text-center" style="color: #555;">Choose one of our existing prompts or create your own to begin a discussion others can join.</p> {% endcomment %}
+
+<!-- 🌸 Top Section -->
+<div class="container mt-4 mb-5">
+  <div class="pastel-bg mb-4 text-center">
+    <div class="text-center mb-4">
+      <img src="{% static 'images/woman.gif' %}" alt="Profile gif" style="max-width: 220px;">
+    </div>
+    <h2 class="mb-3" style="font-family: 'Segoe UI', sans-serif; color: #6a1b9a;">🌸 Welcome to the Luniva Community</h2>
+    <p class="lead" style="color: #444;">You're not alone. Connect, share, and grow with others navigating their wellness journey.</p>
+  </div>
+
+  <!-- ✨ Start a Community Conversation -->
+  <div class="container-fluid pastel-bg p-4">
+    <h3 class="mb-4 text-center" style="color: #6a1b9a;">✨ Start a Community Conversation</h3>
+    <p class="text-center" style="color: #555;">Choose one of our existing prompts or create your own to begin a discussion others can join.</p>
+
+    <!-- 🌟 Suggested Prompts Dropdown -->
+    <form method="post">
+      {% csrf_token %}
+      <input type="hidden" name="static_prompt_submit" value="1">
+      <div class="row bg-pastel-pink p-3 mb-4 rounded">
+        <div class="col-md-4 d-flex align-items-center justify-content-center">
+          <p class="fw-bold text-center" style="color: #d81b60;">Select an existing prompt</p>
+        </div>
+        <div class="col-md-4">
+          <select name="static_prompt" class="form-select">
+            <option value="">-- Choose a prompt --</option>
+            {% for prompt in static_prompts %}
+              <option value="{{ prompt }}">{{ prompt }}</option>
+            {% endfor %}
+          </select>
+        </div>
+        <div class="col-md-4 text-center">
+          <button type="submit" class="btn btn-pink mt-2">Start Conversation</button>
+        </div>
+      </div>
+    </form>
+
+    <!-- ✍️ Add Your Own Prompt -->
+    <form method="post">
+      {% csrf_token %}
+      <input type="hidden" name="custom_prompt" value="1">
+      <div class="row bg-pastel-purple p-3 mb-4 rounded">
+        <div class="col-md-4 d-flex align-items-center justify-content-center">
+          <p class="fw-bold text-center" style="color: white;">Add your own topic</p>
+        </div>
+        <div class="col-md-4">
+          <input type="text" name="title" class="form-control mb-2" placeholder="Prompt title">
+          <textarea name="content" class="form-control" rows="3" placeholder="Share your thoughts here"></textarea>
+        </div>
+        <div class="col-md-4 text-center">
+          <button type="submit" class="btn btn-purple mt-2">Start Conversation</button>
+        </div>
+      </div>
+    </form>
+
+    <!-- 🗂️ Previous Conversations -->
+    <div class="mt-5">
+      <h4 class="mb-3 text-center" style="color: #6a1b9a;">🗂️ Previous Conversations</h4>
+      <div class="d-flex flex-wrap justify-content-center">
+        {% for p in prompts %}
+          <a href="{% url 'prompt_detail' p.id %}" class="btn btn-outline-purple m-2">{{ p.title }}</a>
+        {% empty %}
+          <p class="text-muted text-center">No conversations yet.</p>
+        {% endfor %}
+      </div>
+    </div>
+  </div>
+
+  <!-- 💬 General Comments Section -->
+<div class="container mt-5">
+  <h4 class="mb-4 text-center" style="color: #d81b60;">💬 Community Comments</h4>
+  <div class="row">
+    <!-- 📝 Comment Form -->
+    <div class="col-md-6">
+      <div class="card shadow-sm p-4 mb-4">
+        <h5 class="mb-3" style="color: #6a1b9a;">📝 Share a Comment</h5>
+        <form method="POST">
+          {% csrf_token %}
+          <div class="mb-3">{{ form.name.label_tag }} {{ form.name }}</div>
+          <div class="mb-3">{{ form.content.label_tag }} {{ form.content }}</div>
+          <div class="form-check mb-3">
+            {{ form.is_anonymous }} {{ form.is_anonymous.label_tag }}
+          </div>
+          <button type="submit" class="btn btn-purple">Post Comment</button>
+        </form>
+      </div>
+    </div>
+
+    <!-- 💬 Comment List -->
+    <div class="col-md-6">
+      <div class="card shadow-sm p-4 mb-4">
+        <h5 class="mb-3" style="color: #6a1b9a;">💬 Recent Comments</h5>
+        {% for comment in comments %}
+          <div class="card mb-3" style="border: 1px solid #d8cbe6; background-color: #fdf9ff; border-radius: 8px;">
+            <div class="card-body">
+              <p class="mb-1"><strong>{{ comment.display_name }}</strong>
+              <span class="text-muted">on {{ comment.created_at|date:"M d, Y" }}</span></p>
+              <p>{{ comment.content|linebreaksbr }}</p>
+
+          {% if comment.can_edit_flag %}
+            <div class="text-end">
+              <a href="{% url 'edit_comment' comment.id %}" class="btn btn-sm btn-outline-purple">Edit</a>
+              <a href="{% url 'delete_comment' comment.id %}" class="btn btn-sm btn-outline-pink">Delete</a>
+            </div>
+          {% endif %}
+        </div>
+      </div>
+    {% empty %}
+    <p class="text-muted">No comments yet. Be the first to share!</p>
+    {% endfor %}
+
+        <!-- 🔄 Pagination -->
+        <div class="text-center mt-3">
+          {% if comments.has_previous %}
+            <a href="?page={{ comments.previous_page_number }}" class="btn btn-pink-sm">← Previous</a>
+          {% endif %}
+          {% if comments.has_next %}
+            <a href="?page={{ comments.next_page_number }}" class="btn btn-pink btn-sm">Next →</a>
+          {% endif %}
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+  <!-- 🚧 Coming Soon Section -->
+  <div class="container mt-5 pastel-bg p-4">
+    <div class="text-center mb-4">
+      <h4 class="mb-2" style="color: #6a1b9a;">🚧 Coming Soon</h4>
+      <p style="color: #555;">Soon you'll be able to share diary entries, gratitude reflections, self-care tips, and cycle insights with other members.</p>
+    </div>
+
+    <div class="row mb-4">
+      <div class="col-md-6 mb-4">
+        <div class="card shadow-sm">
+          <div class="chart-heading bg-pastel-purple">Shared Stories</div>
+          <div class="card-body">
+            <p>Coming soon: Share your personal cycle stories and reflections with the community.</p>
+            <a href="{% url 'diary_history' %}" class="btn btn-purple">📖 View Diaries</a>
+          </div>
+        </div>
+      </div>
+
+      <div class="col-md-6 mb-4">
+        <div class="card shadow-sm">
+          <div class="chart-heading bg-pastel-pink">Gratitude Wall</div>
+          <div class="card-body">
+            <p>Coming soon: Post what you're grateful for and read uplifting moments from others.</p>
+            <a href="{% url 'add_gratitude' %}" class="btn btn-pink">💖 View Gratitude</a>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="row mb-4">
+      <div class="col-md-6 mb-4">
+        <div class="card shadow-sm">
+          <div class="chart-heading bg-pastel-green">Self-Care Tips</div>
+          <div class="card-body">
+            <p>Coming soon: Discover and share wellness routines, herbal remedies, and self-care ideas.</p>
+            <a href="{% url 'wellness_update' %}" class="btn btn-purple">🌿 View Self-Care</a>
+          </div>
+        </div>
+      </div>
+
+    <div class="col-md-6 mb-4">
+      <div class="card shadow-sm">
+        <div class="chart-heading bg-pastel-blue">Cycle Insights</div>
+        <div class="card-body">
+          <p>Coming soon: Compare your cycle patterns with anonymized community trends.</p>
+          <a href="{% url 'dashboard' %}" class="btn btn-pink">📊 View Dashboard</a>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+{% endblock %}

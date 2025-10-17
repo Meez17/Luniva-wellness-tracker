@@ -1,0 +1,15 @@
+{% extends "tracker/base.html" %}
+{% block title %}Add Community Prompt{% endblock %}
+{% block content %}
+<div class="container pastel-bg mt-4" style="max-width: 800px;">
+  <h3 class="mb-3">✨ Share a Community Prompt</h3>
+  <p>Start a public conversation others can join. Prompts here are visible to all users.</p>
+
+  <form method="post">
+    {% csrf_token %}
+    <div class="mb-3">{{ form.title.label_tag }} {{ form.title }}</div>
+    <div class="mb-3">{{ form.content.label_tag }} {{ form.content }}</div>
+    <button type="submit" class="btn btn-purple">Share Prompt</button>
+  </form>
+</div>
+{% endblock %}

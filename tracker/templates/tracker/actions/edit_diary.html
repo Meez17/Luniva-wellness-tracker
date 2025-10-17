@@ -1,0 +1,61 @@
+{% extends "tracker/base.html" %}
+{% block title %}Edit Diary Entry{% endblock %}
+{% load static%}
+
+{% block content %}
+<div class="container mt-5 pastel-bg" style="max-width: 1100px;">
+    <div class="card-body">
+
+      <div class="text-center mb-4">
+        <img src="{% static 'images/diary.gif' %}" alt="Journaling gif" style="max-width: 200px;"></div>
+
+      <h3 class="text-center mb-2" style="color:#A18BD0;">📖 Edit Diary Entry</h3>
+      <p class="text-center text-light mb-4">“Your thoughts matter. Your story matters. Let’s write it down.”</p>
+
+      <form method="POST">
+        {% csrf_token %}
+
+        <div class="mb-4">
+          <label>🧠 What's on your mind today?</label>
+          {{ form.title }}
+        </div>
+
+        <div class="mb-4">
+          <label>📅 Date</label>
+          {{ form.date }}
+        </div>
+
+        <div class="mb-4">
+          <label>😊 How are you feeling today?</label>
+          {{ form.mood }}
+          {{ form.custom_mood }}
+        </div>
+
+        <div class="mb-4">
+          <label>📝 Your Thoughts</label>
+          {{ form.content }}
+        </div>
+
+        <details class="mb-4">
+          <summary style="cursor:pointer; color:#fff;">🎯 What do you want to achieve?</summary>
+          <div class="mt-3">
+            <label>Today</label>
+            {{ form.short_term }}
+            <label>This Week</label>
+            {{ form.medium_term }}
+            <label>This Month</label>
+            {{ form.long_term }}
+          </div>
+        </details>
+
+        <div class="d-flex justify-content-between mt-4">
+          <button type="submit" name="save_draft" class="btn" style="background-color:#A18BD0; color:#fff;">Save as Draft</button>
+          <a href="{% url 'diary_page' %}" class="btn" style="background-color: #ECA1A6; color: #fff;">← Back</a>
+          <button type="submit" class="btn" style="background-color:#A18BD0; color:#fff;">Save Entry</button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
+
+{% endblock %}
